@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giggiplay Blog Feed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .post {
+      background: #fff;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .post h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+    .post a {
+      text-decoration: none;
+      color: #0066cc;
+    }
+    .post p {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>📰 Latest Posts from Giggiplay</h1>
+  <div id="posts">Loading posts...</div>
+
+  <script>
+    const feedUrl = "https://www.giggiplay.online/feeds/posts/default?alt=json";
+
+    async function fetchPosts() {
+      try {
+        const res = await fetch(feedUrl);
+        const data = await res.json();
+        let html = "";
+
+        data.feed.entry.forEach(entry => {
+          const title = entry.title.$t;
+          const link = entry.link.find(l => l.rel === "alternate").href;
+          const content = entry.content ? entry.content.$t : "";
+          const snippet = content.replace(/<[^>]+>/g, "").substring(0, 150);
+
+          html += `
+            <div class="post">
+              <h2><a href="${link}" target="_blank">${title}</a></h2>
+              <p>${snippet}...</p>
+            </div>
+          `;
+        });
+
+        document.getElementById("posts").innerHTML = html;
+      } catch (error) {
+        document.getElementById("posts").innerHTML = "⚠️ Error fetching posts!";
+        console.error(error);
+      }
+    }
+
+    fetchPosts();
+  </script>
+</body>
+</html>
