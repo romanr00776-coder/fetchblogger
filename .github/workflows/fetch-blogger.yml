@@ -1,0 +1,22 @@
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Fetch Blogger Posts & Generate HTML
+        env:
+          BLOG_ID: ${{ secrets.7514934287514709504 }}
+          API_KEY: ${{ secrets.AIzaSyCgeecqrz43BWNJ9SpTpPqgLnCyG89tiq4 }}
+        run: |
+          python fetch_blogger_posts.py
+
+      - name: Commit & Push changes
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git add posts/index.html
+          git commit -m "Update Blogger posts" || echo "No changes to commit"
+          git push https://x-access-token:${GH_PAT}@github.com/romanr00776-coder/Giggiplay.github.io.git HEAD:main
