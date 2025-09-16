@@ -24,8 +24,8 @@ jobs:
 
       - name: Fetch Blogger Posts & Generate HTML
         env:
-          BLOG_ID: ${{ secrets.7514934287514709504 }}
-          API_KEY: ${{ AIzaSyCgeecqrz43BWNJ9SpTpPqgLnCyG89tiq4 }}
+          BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
+          API_KEY: ${{ secrets.BLOGGER_API_KEY }}
         run: python fetch_blogger_posts.py
 
       - name: Commit & Push changes
