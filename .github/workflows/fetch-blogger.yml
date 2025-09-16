@@ -1,3 +1,19 @@
+name: Fetch Blogger Posts
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -9,9 +25,8 @@
       - name: Fetch Blogger Posts & Generate HTML
         env:
           BLOG_ID: ${{ secrets.7514934287514709504 }}
-          API_KEY: ${{ secrets.AIzaSyCgeecqrz43BWNJ9SpTpPqgLnCyG89tiq4 }}
-        run: |
-          python fetch_blogger_posts.py
+          API_KEY: ${{ AIzaSyCgeecqrz43BWNJ9SpTpPqgLnCyG89tiq4 }}
+        run: python fetch_blogger_posts.py
 
       - name: Commit & Push changes
         env:
