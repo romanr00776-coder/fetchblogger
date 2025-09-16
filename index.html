@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Giggiplay Blog Feed</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,14 +42,11 @@
   <div id="posts">Loading posts...</div>
 
   <script>
-    const feedUrl = "https://www.giggiplay.online/feeds/posts/default?alt=json";
+    const feedUrl = "https://www.giggiplay.online/feeds/posts/default?alt=json-in-script&callback=?";
 
-    async function fetchPosts() {
-      try {
-        const res = await fetch(feedUrl);
-        const data = await res.json();
-        let html = "";
-
+    $.getJSON(feedUrl, function(data) {
+      let html = "";
+      if (data.feed && data.feed.entry) {
         data.feed.entry.forEach(entry => {
           const title = entry.title.$t;
           const link = entry.link.find(l => l.rel === "alternate").href;
@@ -62,15 +60,13 @@
             </div>
           `;
         });
-
-        document.getElementById("posts").innerHTML = html;
-      } catch (error) {
-        document.getElementById("posts").innerHTML = "⚠️ Error fetching posts!";
-        console.error(error);
+      } else {
+        html = "⚠️ No posts found!";
       }
-    }
-
-    fetchPosts();
+      $("#posts").html(html);
+    }).fail(function() {
+      $("#posts").html("⚠️ Error fetching posts!");
+    });
   </script>
 </body>
 </html>
