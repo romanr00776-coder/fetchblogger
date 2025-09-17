@@ -1,81 +1,72 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exclusive Content Just for You!</title>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #ff6b6b, #f8e71c);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #fff;
-    text-align: center;
-  }
-
-  .card {
-    background: rgba(0,0,0,0.6);
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 400px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease;
-  }
-
-  .card:hover {
-    transform: scale(1.05);
-  }
-
-  h1 {
-    font-size: 2em;
-    margin-bottom: 15px;
-  }
-
-  p {
-    font-size: 1.2em;
-    margin-bottom: 25px;
-  }
-
-  .link-button {
-    display: inline-block;
-    padding: 15px 25px;
-    background: #ff4757;
-    color: #fff;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-
-  .link-button:hover {
-    background: #ff6b81;
-    transform: scale(1.05);
-  }
-
-  .ads {
-    margin-top: 30px;
-    font-size: 0.9em;
-    color: #fffa;
-  }
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giggiplay Blog Feed</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .post {
+      background: #fff;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .post h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+    .post a {
+      text-decoration: none;
+      color: #0066cc;
+    }
+    .post p {
+      color: #555;
+    }
+  </style>
 </head>
 <body>
+  <h1>📰 Latest Posts from Giggiplay</h1>
+  <div id="posts">Loading posts...</div>
 
-<div class="card">
-  <h1>🚀 Must-See Content!</h1>
-  <p>Click below to unlock exclusive tips, tricks, or secret links.</p>
-  <a class="link-button" href="https://github.com/your-repo" target="_blank">Open Now</a>
-  <div class="ads">
-    🔥 Sponsored Content – Check this out while you wait!
-  </div>
-</div>
+  <script>
+    const feedUrl = "https://www.giggiplay.online/feeds/posts/default?alt=json-in-script&callback=?";
 
+    $.getJSON(feedUrl, function(data) {
+      let html = "";
+      if (data.feed && data.feed.entry) {
+        data.feed.entry.forEach(entry => {
+          const title = entry.title.$t;
+          const link = entry.link.find(l => l.rel === "alternate").href;
+          const content = entry.content ? entry.content.$t : "";
+          const snippet = content.replace(/<[^>]+>/g, "").substring(0, 150);
+
+          html += `
+            <div class="post">
+              <h2><a href="${link}" target="_blank">${title}</a></h2>
+              <p>${snippet}...</p>
+            </div>
+          `;
+        });
+      } else {
+        html = "⚠️ No posts found!";
+      }
+      $("#posts").html(html);
+    }).fail(function() {
+      $("#posts").html("⚠️ Error fetching posts!");
+    });
+  </script>
 </body>
 </html>
