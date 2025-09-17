@@ -3,7 +3,7 @@ import os
 
 # Aapka Blogger Blog ID aur API KEY
 BLOG_ID = "7514934287514709504"
-API_KEY = "AIzaSyCgeecqrz43BWNJ9SpTpPqgLnCyG89tiq4"
+API_KEY = ""
 
 def get_posts():
     url = f"https://www.googleapis.com/blogger/v3/blogs/{7514934287514709504}/posts?key={AIzaSyCgeecqrz43BWNJ9SpTpPqgLnCyG89tiq4}"
